@@ -18,9 +18,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
-        if(Auth::guard('doctor')->check() || Auth::guard('patient')->check() || Auth::guard('assistant')->check() || Auth::guard('receptionist')->check()){
-            return redirect('http://localhost:8000/');
-        }
         return view('auth.login');
     }
 
@@ -31,9 +28,9 @@ class AuthenticatedSessionController extends Controller
     {
 
         if(Auth::guard('doctor')->check() || Auth::guard('patient')->check() || Auth::guard('assistant')->check() || Auth::guard('receptionist')->check()){
-            return redirect('http://localhost:8000/');
+            return redirect()->route('login');
         }
-        
+
         // Get the credentials and role
         $credentials = [
             'email' => $request->input('email'),
@@ -41,39 +38,39 @@ class AuthenticatedSessionController extends Controller
         ];
 
         $role = $request->role;
-    
+
         // Ensure the role is valid and exists in the guards
         if (!in_array($role, ['doctor', 'assistant', 'receptionist', 'patient'])) {
             return back()->withErrors([
                 'role' => 'Invalid role selected.',
             ])->onlyInput('email');
         }
-    
+
         // Attempt to authenticate using the appropriate guard
         if (Auth::guard($role)->attempt($credentials)) {
             $request->session()->regenerate();
 
         if ($role=='doctor'){
-            return redirect()->intended('/doctordashboard');
+            return redirect()->intended('doctordashboard');
         }
         else if($role =='patient'){
-            return redirect()->intended('/patientdashboard');
+            return redirect()->intended('patientdashboard');
         }
         else if($role =='receptionist'){
-            return redirect()->intended('/receptionistdashboard');
+            return redirect()->intended('receptionistdashboard');
         }
         else{
-            return redirect()->intended('/assistantdashboard');
+            return redirect()->intended('assistantdashboard');
         }
-            
+
         }
-    
+
         // If authentication fails, return with error message
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
-    
+
 
     /**
      * Destroy an authenticated session.
@@ -81,13 +78,13 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
 
-           
+
 
         Auth::guard('doctor')->logout();
         Auth::guard('assistant')->logout();
         Auth::guard('patient')->logout();
         Auth::guard('receptionist')->logout();
-        
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

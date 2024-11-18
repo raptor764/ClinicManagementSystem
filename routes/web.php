@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
 
 // Authentication routes
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])
+    ->middleware(['not_authed'])
     ->name('login');
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);

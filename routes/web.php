@@ -5,10 +5,12 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReceptionistController;
 use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PatientController;
+
 
 // Home route
 Route::get('/', function () {
@@ -18,19 +20,22 @@ Route::get('/', function () {
 // Dashboard route with authentication middleware
 Route::get('/receptionistdashboard', function () {
     return view('dashboard');
-})->middleware(['auth:receptionist', 'verified'])->name('dashboard');
+})->middleware(['auth:receptionist', 'verified'])->name('receptionist.dashboard');
 
 Route::get('/doctordashboard', function () {
     return view('dashboard');
-})->middleware(['auth:doctor', 'verified'])->name('dashboard');
+})->middleware(['auth:doctor', 'verified'])->name('doctor.dashboard');
 
 Route::get('/patientdashboard', function () {
     return view('dashboard');
-})->middleware(['auth:patient', 'verified'])->name('dashboard');
+})->middleware(['auth:patient', 'verified'])->name('patient.dashboard');
 
 Route::get('/assistantdashboard', function () {
     return view('dashboard');
-})->middleware(['auth:assistant', 'verified'])->name('dashboard');
+})->middleware(['auth:assistant', 'verified'])->name('assistant.dashboard');
+
+//Dashboard
+Route::get('/dashboard', [DashboardController::class, 'view'])->name('dashboard');
 
 // Profile management routes
 Route::middleware('auth')->group(function () {

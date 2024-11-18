@@ -16,8 +16,11 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create()
     {
+        /*if(Auth::guard('doctor')->check() || Auth::guard('patient')->check() || Auth::guard('assistant')->check() || Auth::guard('receptionist')->check()){
+            return redirect('http://localhost:8000/');
+        }*/
         return view('auth.login');
     }
 
@@ -75,7 +78,11 @@ class AuthenticatedSessionController extends Controller
 
            
 
-        Auth::logout();
+        Auth::guard('doctor')->logout();
+        Auth::guard('assistant')->logout();
+        Auth::guard('patient')->logout();
+        Auth::guard('receptionist')->logout();
+        
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

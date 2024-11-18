@@ -18,9 +18,9 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
-        /*if(Auth::guard('doctor')->check() || Auth::guard('patient')->check() || Auth::guard('assistant')->check() || Auth::guard('receptionist')->check()){
+        if(Auth::guard('doctor')->check() || Auth::guard('patient')->check() || Auth::guard('assistant')->check() || Auth::guard('receptionist')->check()){
             return redirect('http://localhost:8000/');
-        }*/
+        }
         return view('auth.login');
     }
 
@@ -29,6 +29,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginUser $request): RedirectResponse
     {
+
+        if(Auth::guard('doctor')->check() || Auth::guard('patient')->check() || Auth::guard('assistant')->check() || Auth::guard('receptionist')->check()){
+            return redirect('http://localhost:8000/');
+        }
+        
         // Get the credentials and role
         $credentials = [
             'email' => $request->input('email'),

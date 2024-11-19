@@ -72,7 +72,7 @@ Route::get('/patient/deleteaccount', [PatientController::class, 'patientDeleteAc
 //Route::post('/patient/requestappointment', [PatientController::class, 'requestAppointment'])->name('patient.requestAppointment');
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:patient')->group(function () {
     Route::get('/patient/requestappointment', [PatientController::class, 'showRequestAppointmentForm'])->name('patient.requestAppointmentForm');
     Route::post('/patient/requestappointment', [PatientController::class, 'requestAppointment'])->name('patient.requestAppointment');
 });

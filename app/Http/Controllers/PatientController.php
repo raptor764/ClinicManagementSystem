@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Doctor;
+use App\Models\Receptionist;
 
 class PatientController extends Controller
 {
@@ -31,8 +33,8 @@ class PatientController extends Controller
         $validatedData = $request->validate([
             'Date' => 'required|date|after_or_equal:today',
             'Time' => 'required|date_format:H:i',
-            'receptionist_name' => 'required|string|max:255',
-            'doctor_name' => 'required|string|max:255',
+            'receptionist_id' => 'required|integer|exists:receptionists,ReceptionistID',
+            'doctor_id' => 'required|integer|exists:doctors,DoctorID',
         ]);
 
         // Get the authenticated patient
@@ -42,23 +44,12 @@ class PatientController extends Controller
             return redirect()->back()->with('error', 'Unauthorized action.');
         }
 
-        // Fetch the doctor's ID based on the entered name
-        $doctor = Doctor::where('Name', $validatedData['doctor_name'])->first();
-        if (!$doctor) {
-            return redirect()->back()->with('error', 'Doctor not found.');
-        }
-
-        // Fetch the receptionist's ID based on the entered name
-        $receptionist = Receptionist::where('Name', $validatedData['receptionist_name'])->first();
-        if (!$receptionist) {
-            return redirect()->back()->with('error', 'Receptionist not found.');
-        }
 
         // Create the appointment entry
         Appointment::create([
             'PatientID' => $patient->id,
-            'ReceptionistID' => $receptionist->id,
-            'DoctorID' => $doctor->id,
+            'ReceptionistID' => $request()->receptionist_id,
+            'DoctorID' => $request()->doctor_id,
             'Date' => $validatedData['Date'],
             'Time' => $validatedData['Time'],
             'Status' => 'pending',
@@ -70,7 +61,12 @@ class PatientController extends Controller
 //Show Appointment Request
     public function showRequestAppointmentForm()
 {
-    return view('patient.requestAppointment');
+
+    $doctors = Doctor::all(); 
+    $receptionists = Receptionist::all();
+
+  //  return view('request-appointment', compact('doctors', 'receptionists'));
+    return view('patient.requestAppointment', compact('doctors', 'receptionists'));
 }  
 }
 

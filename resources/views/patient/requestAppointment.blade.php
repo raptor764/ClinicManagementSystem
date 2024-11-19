@@ -1,37 +1,49 @@
-
 @extends('layouts.app')
-    <div class="container">
-        <h1>Request an Appointment</h1>
-        <form action="{{ route('patient.requestAppointment') }}" method="POST">
-            @csrf
-            <!-- Appointment Date -->
-            <div>
-                <label for="appointment_date">Appointment Date</label>
-                <input type="date" id="appointment_date" name="appointment_date" required>
-            </div>
 
-            <!-- Appointment Time -->
-            <div>
-                <label for="appointment_time">Appointment Time</label>
-                <input type="time" id="appointment_time" name="appointment_time" required>
-            </div>
 
-            <!-- Receptionist Name -->
-            <div>
-                <label for="receptionist_name">Receptionist Name</label>
-                <input type="text" id="receptionist_name" name="receptionist_name" required>
-            </div>
+<div class="container">
+    <h1>Request an Appointment</h1>
+    <form action="{{ route('patient.requestAppointment') }}" method="POST">
+        @csrf
 
-            <!-- Doctor Name -->
-            <div>
-                <label for="doctor_name">Doctor Name</label>
-                <input type="text" id="doctor_name" name="doctor_name" required>
-            </div>
+        <!-- Appointment Date -->
+        <div class="mb-3">
+            <label for="appointment_date" class="form-label">Appointment Date</label>
+            <input type="date" id="appointment_date" name="appointment_date" class="form-control" required>
+        </div>
 
-            <!-- Submit Button -->
-            <div>
-                <button type="submit">Request Appointment</button>
-            </div>
-        </form>
-    </div>
+        <!-- Appointment Time -->
+        <div class="mb-3">
+            <label for="appointment_time" class="form-label">Appointment Time</label>
+            <input type="time" id="appointment_time" name="appointment_time" class="form-control" required>
+        </div>
+
+        <!-- Receptionist Dropdown -->
+        <div class="mb-3">
+            <label for="receptionist_id" class="form-label">Receptionist</label>
+            <select id="receptionist_id" name="receptionist_id" class="form-select" required>
+                <option value="" disabled selected>Select a Receptionist</option>
+                @foreach ($receptionists as $receptionist)
+                    <option value="{{ $receptionist->ReceptionistID }}">{{ $receptionist->Name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Doctor Dropdown -->
+        <div class="mb-3">
+            <label for="doctor_id" class="form-label">Doctor</label>
+            <select id="doctor_id" name="doctor_id" class="form-select" required>
+                <option value="" disabled selected>Select a Doctor</option>
+                @foreach ($doctors as $doctor)
+                    <option value="{{ $doctor->DoctorID }}">{{ $doctor->Name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+            <button type="submit" class="btn btn-primary">Request Appointment</button>
+        </div>
+    </form>
+</div>
 

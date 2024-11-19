@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
     {
 
         if(Auth::guard('doctor')->check() || Auth::guard('patient')->check() || Auth::guard('assistant')->check() || Auth::guard('receptionist')->check()){
-            return redirect()->route('login');
+            return redirect()->route('dashboard');
         }
 
         // Get the credentials and role

@@ -69,10 +69,23 @@ Route::get('/assistant/deleteaccount', [AssistantController::class, 'assistantDe
 Route::get('/patient/deleteaccount', [PatientController::class, 'patientDeleteAccount'])->name('patient.deleteAccount');
 
 //Patient Request Appointment Route
-//Route::post('/patient/requestappointment', [PatientController::class, 'requestAppointment'])->name('patient.requestAppointment');
-
 
 Route::middleware('auth:patient')->group(function () {
     Route::get('/patient/requestappointment', [PatientController::class, 'showRequestAppointmentForm'])->name('patient.requestAppointmentForm');
     Route::post('/patient/requestappointment', [PatientController::class, 'requestAppointment'])->name('patient.requestAppointment');
 });
+
+
+// Respond to Appointment Request
+Route::middleware('auth:receptionist')->group(function () {
+    Route::post('/receptionist/respond/{appointmentId}', [ReceptionistController::class, 'respondToAppointmentRequest'])->name('receptionists.respond');
+});
+
+//View Appointment Requests For the Receptionist
+
+Route::middleware('auth:receptionist')->group(function () {
+    Route::get('/receptionist/appointmentrequests', [ReceptionistController::class, 'viewAppointmentRequests'])->name('receptionists.viewAppointments');
+});
+
+
+

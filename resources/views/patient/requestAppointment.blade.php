@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-
+k 
 <div class="container">
     <h1>Request an Appointment</h1>
     <form action="{{ route('patient.requestAppointment') }}" method="POST">

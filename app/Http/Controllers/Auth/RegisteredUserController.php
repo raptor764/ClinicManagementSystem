@@ -34,8 +34,21 @@ class RegisteredUserController extends Controller
      */
     public function store(RegisterUser $request): RedirectResponse
     {
-        // Validate the request using RegisterUser rules
-        $validatedData = $request->validated();
+        //Validate Request
+        $validator = Validator::make($request->all(), [
+            'appointment_date' => 'required|date|after_or_equal:today',
+            'appointment_time' => 'required|date_format:H:i',
+            'receptionist_id' => 'required|integer|exists:receptionists,ReceptionistID',
+            'doctor_id' => 'required|integer|exists:doctors,DoctorID',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('patient.requestAppointmentForm')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+       
 
         // Determine which model to use based on the role
         $userModel = $this->getModelClass($validatedData['role']);

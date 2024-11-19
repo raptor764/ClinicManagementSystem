@@ -77,9 +77,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-
-
-
         Auth::guard('doctor')->logout();
         Auth::guard('assistant')->logout();
         Auth::guard('patient')->logout();

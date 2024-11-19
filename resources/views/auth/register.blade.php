@@ -53,14 +53,50 @@
 
             <div class="mt-4">
                 <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required />
+                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')"/>
                 <x-input-error :messages="$errors->get('phone')" class="mt-2" />
             </div>
 
             <div class="mt-4">
                 <x-input-label for="section_name" :value="__('Section Name')" />
-                <x-text-input id="section_name" class="block mt-1 w-full" type="text" name="section_name" :value="old('section_name')" />
+                <select id="section_name" name="section_name" class="block mt-1 w-full">
+                    <option value="">Select Section</option>
+                    @foreach($sections as $section)
+                        <option value="{{ $section->SectionID }}">{{ $section->Name }}</option>
+                    @endforeach
+                </select>
                 <x-input-error :messages="$errors->get('section_name')" class="mt-2" />
+            </div>
+        </div>
+
+        <!-- Assistant Specific Fields -->
+        <div id="assistant-fields" class="hidden">
+            <div class="mt-4">
+                <x-input-label for="phone" :value="__('Phone')" />
+                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')"/>
+                <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+            </div>
+
+            <div class="mt-4">
+                <x-input-label for="section_name" :value="__('Section Name')" />
+                <select id="section_name" name="section_name" class="block mt-1 w-full">
+                    <option value="">Select Section</option>
+                    @foreach($sections as $section)
+                        <option value="{{ $section->SectionID }}">{{ $section->Name }}</option>
+                    @endforeach
+                </select>
+                <x-input-error :messages="$errors->get('section_name')" class="mt-2" />
+            </div>
+
+            <div class="mt-4">
+                <x-input-label for="doctor_name" :value="__('Doctor Name')" />
+                <select id="doctor_name" name="doctor_name" class="block mt-1 w-full">
+                    <option value="">Select Doctor</option>
+                    @foreach($doctors as $doctor)
+                        <option value="{{ $doctor->DoctorID }}">{{ $doctor->Name }}</option>
+                    @endforeach
+                </select>
+                <x-input-error :messages="$errors->get('doctor_name')" class="mt-2" />
             </div>
         </div>
 
@@ -80,29 +116,8 @@
 
             <div class="mt-4">
                 <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required />
+                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')"/>
                 <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-            </div>
-        </div>
-
-        <!-- Assistant Specific Fields -->
-        <div id="assistant-fields" class="hidden">
-            <div class="mt-4">
-                <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required />
-                <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-            </div>
-
-            <div class="mt-4">
-                <x-input-label for="section_name" :value="__('Section Name')" />
-                <x-text-input id="section_name" class="block mt-1 w-full" type="text" name="section_name" :value="old('section_name')" />
-                <x-input-error :messages="$errors->get('section_name')" class="mt-2" />
-            </div>
-
-            <div class="mt-4">
-                <x-input-label for="doctor_name" :value="__('Doctor Name')" />
-                <x-text-input id="doctor_name" class="block mt-1 w-full" type="text" name="doctor_name" :value="old('doctor_name')" />
-                <x-input-error :messages="$errors->get('doctor_name')" class="mt-2" />
             </div>
         </div>
 
@@ -110,7 +125,7 @@
         <div id="receptionist-fields" class="hidden">
             <div class="mt-4">
                 <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required />
+                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')"/>
                 <x-input-error :messages="$errors->get('phone')" class="mt-2" />
             </div>
         </div>
@@ -127,35 +142,22 @@
     </form>
 
     <script>
-function showRoleFields() {
+        function showRoleFields() {
             const role = document.getElementById("role").value;
-
-            // Hide all role-specific fields initially
             document.getElementById("doctor-fields").classList.add("hidden");
             document.getElementById("patient-fields").classList.add("hidden");
             document.getElementById("assistant-fields").classList.add("hidden");
             document.getElementById("receptionist-fields").classList.add("hidden");
 
-            var unrequired_attr = function (role_fields) {
-                if (document.getElementById(role_fields).querySelectorAll("[required]").length !== 0)
-                    document.getElementById(role_fields).querySelectorAll("[required]")[0].required = false;
-            }
-
-
-            // Show the relevant fields based on the selected role
             if (role === "doctor") {
                 document.getElementById("doctor-fields").classList.remove("hidden");
-                unrequired_attr("patient-fields");unrequired_attr("assistant-fields");unrequired_attr("receptionist-fields");
-            } else if (role === "patient") {
-                document.getElementById("patient-fields").classList.remove("hidden");
-                unrequired_attr("doctor-fields");unrequired_attr("assistant-fields");unrequired_attr("receptionist-fields");
             } else if (role === "assistant") {
                 document.getElementById("assistant-fields").classList.remove("hidden");
-                unrequired_attr("doctor-fields");unrequired_attr("patient-fields");unrequired_attr("receptionist-fields");
+            } else if (role === "patient") {
+                document.getElementById("patient-fields").classList.remove("hidden");
             } else if (role === "receptionist") {
                 document.getElementById("receptionist-fields").classList.remove("hidden");
-                unrequired_attr("doctor-fields");unrequired_attr("patient-fields");unrequired_attr("assistant-fields");
-            }
-        }
+            }
+        }
     </script>
 </x-guest-layout>

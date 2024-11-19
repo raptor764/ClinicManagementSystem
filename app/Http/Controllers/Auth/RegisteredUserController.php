@@ -38,64 +38,51 @@ class RegisteredUserController extends Controller
      */
     public function store(RegisterUser $request)
     {
-        //Validate Request
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'email' => 'required|email:rfc,dns',
-            'password' => 'required|confirmed|min:8',
-            'role' => 'required|string',
-
-            'phone' => 'string|min:10',
-            'specialization' => 'string',
-            'section_name' => 'exists:sections,SectionID',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->route('login')
-                ->withErrors($validator)
-                ->withInput();
-        }
-        return redirect()->route('login');
-
         // Determine which model to use based on the role
         $userModel = $this->getModelClass($request->role);
-
-//        if ($request->role == 'doctor' && (!$request->has('specialization') || !$request->has('section_id') || !$request->has('phone'))){
-        if ($request->role == 'doctor' && (!$request->has('specialization') || !$request->has('phone'))){
-            return redirect()->route('register')
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-       // Create the user
-       $user = $userModel::create([
-        'Name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        ]);
 
         // Additional fields based on role
         switch ($request->role) {
             case 'doctor':
-                $user->specialization = $request->specialization;
-                $user->phone = $request->phone;
-                $user->section_name = $request->section_name;
+                $user = $userModel::create([
+                    'Name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'Specialization' => $request->specialization,
+                    'Phone' => $request->doctor_phone,
+                    'SectionID' => $request->doctor_section_name
+                ]);
                 break;
 
             case 'patient':
-                $user->date_of_birth = $request->date_of_birth;
-                $user->address = $request->address;
-                $user->phone = $request->phone;
+                $user = $userModel::create([
+                    'Name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'DateOfBirth' => $request->date_of_birth,
+                    'Address' => $request->address,
+                    'Phone' => $request->patient_phone
+                ]);
                 break;
 
             case 'assistant':
-                $user->phone = $request->phone;
-                $user->section_name = $request->section_name;
-                $user->doctor_name = $request->doctor_name; // Ensure this is a valid field in your Assistant model
+                $user = $userModel::create([
+                    'Name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'Phone' => $request->assistant_phone,
+                    'SectionID' => $request->assistant_section_name,
+                    'DoctorID' => $request->doctor_name,
+                ]);
                 break;
 
             case 'receptionist':
-                $user->phone = $request->phone;
+                $user = $userModel::create([
+                    'Name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'Phone' => $request->receptionist_phone,
+                ]);
                 break;
         }
 

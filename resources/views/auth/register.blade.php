@@ -53,13 +53,13 @@
 
             <div class="mt-4">
                 <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')"/>
+                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="doctor_phone" :value="old('phone')"/>
                 <x-input-error :messages="$errors->get('phone')" class="mt-2" />
             </div>
 
             <div class="mt-4">
                 <x-input-label for="section_name" :value="__('Section Name')" />
-                <select id="section_name" name="section_name" class="block mt-1 w-full">
+                <select id="section_name" name="doctor_section_name" class="block mt-1 w-full">
                     <option value="">Select Section</option>
                     @foreach($sections as $section)
                         <option value="{{ $section->SectionID }}">{{ $section->Name }}</option>
@@ -73,13 +73,13 @@
         <div id="assistant-fields" class="hidden">
             <div class="mt-4">
                 <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')"/>
+                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="assistant_phone" :value="old('phone')"/>
                 <x-input-error :messages="$errors->get('phone')" class="mt-2" />
             </div>
 
             <div class="mt-4">
                 <x-input-label for="section_name" :value="__('Section Name')" />
-                <select id="section_name" name="section_name" class="block mt-1 w-full">
+                <select id="section_name" name="assistant_section_name" class="block mt-1 w-full">
                     <option value="">Select Section</option>
                     @foreach($sections as $section)
                         <option value="{{ $section->SectionID }}">{{ $section->Name }}</option>
@@ -116,7 +116,7 @@
 
             <div class="mt-4">
                 <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')"/>
+                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="patient_phone" :value="old('phone')"/>
                 <x-input-error :messages="$errors->get('phone')" class="mt-2" />
             </div>
         </div>
@@ -125,7 +125,7 @@
         <div id="receptionist-fields" class="hidden">
             <div class="mt-4">
                 <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')"/>
+                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="receptionist_phone" :value="old('phone')"/>
                 <x-input-error :messages="$errors->get('phone')" class="mt-2" />
             </div>
         </div>

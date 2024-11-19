@@ -10,9 +10,9 @@ class RegisterUser extends FormRequest
     {
         // Base validation rules
         $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:' . $this->getModelClass($this->role), // Adjusted for specific user tables
-            'password' => 'required|string|min:8|confirmed',
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
             'role' => 'required|string|in:doctor,assistant,receptionist,patient',
         ];
 
@@ -20,24 +20,24 @@ class RegisterUser extends FormRequest
         switch ($this->role) {
             case 'doctor':
                 $rules['specialization'] = 'required|string|max:255';
-                $rules['phone'] = 'required|string|max:15'; // Assuming a phone number format
-                $rules['section_name'] = 'required|string|max:255';
+                $rules['doctor_phone'] = 'required|string|max:15'; // Assuming a phone number format
+                $rules['doctor_section_name'] = 'required|exists:sections,SectionID';
                 break;
 
             case 'patient':
                 $rules['date_of_birth'] = 'required|date';
                 $rules['address'] = 'required|string|max:255';
-                $rules['phone'] = 'required|string|max:15'; // Assuming a phone number format
+                $rules['patient_phone'] = 'required|string|max:15'; // Assuming a phone number format
                 break;
 
             case 'assistant':
-                $rules['phone'] = 'required|string|max:15'; // Assuming a phone number format
-                $rules['section_name'] = 'required|string|max:255';
-                $rules['doctor_name'] = 'required|string|max:255'; // Assuming you want to validate the doctor's name
+                $rules['assistant_phone'] = 'required|string|max:15'; // Assuming a phone number format
+                $rules['assistant_section_name'] = 'required|string|max:255';
+                $rules['doctor_name'] = 'required|exists:doctors,DoctorID'; // Assuming you want to validate the doctor's name
                 break;
 
             case 'receptionist':
-                $rules['phone'] = 'required|string|max:15'; // Assuming a phone number format
+                $rules['receptionist_phone'] = 'required|string|max:15'; // Assuming a phone number format
                 break;
         }
 

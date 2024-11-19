@@ -59,6 +59,8 @@ Route::post('/register', [RegisteredUserController::class, 'store']);
 // Route for logout
 Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])
 ->middleware(['any_authed'])->name('logout');
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+->middleware(['any_authed'])->name('logout');
 //Delete Account Routes
 
 Route::get('/receptionist/deleteaccount', [ReceptionistController::class, 'receptionistDeleteAccount'])->name('receptionist.deleteAccount');

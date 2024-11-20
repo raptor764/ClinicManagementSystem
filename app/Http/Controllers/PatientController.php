@@ -9,6 +9,8 @@ use Illuminate\Http\RedirectResponse;
 use App\Models\Doctor;
 use App\Models\Receptionist;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Patient;
+use App\Models\MedicalReport;
 
 class PatientController extends Controller
 {
@@ -65,15 +67,79 @@ class PatientController extends Controller
         return redirect()->back()->with('success', 'Appointment request submitted successfully.');
     }
 
-//Show Appointment Request
+//Show Appointment Request Form
     public function showRequestAppointmentForm()
 {
 
     $doctors = Doctor::all();
     $receptionists = Receptionist::all();
 
-  //  return view('request-appointment', compact('doctors', 'receptionists'));
+  
     return view('patient.requestAppointment', compact('doctors', 'receptionists'));
 }
+
+
+//View Appointment Requests Function
+public function viewAppointmentRequests(){
+    $patientId = Auth::guard('patient')->user()->PatientID;
+    
+    $appointments = Appointment::where('PatientID', $patientId)->get();
+    
+    // Pass the appointments to the view
+    return view('patient.viewappointmentrequests', compact('appointments'));
 }
+
+
+//View Scheduled Appointments Function
+public function viewAppointments(){
+    $patientId = Auth::guard('patient')->user()->PatientID;
+    
+    $appointments = Appointment::where('PatientID', $patientId)->where('status', 'approved')->get();
+    
+    // Pass the appointments to the view
+    return view('patient.viewappointments', compact('appointments'));
+}
+
+
+//Cancel Appointment Request Function
+
+public function cancelAppointment(Request $request,$appointmentId){
+
+    $validator = Validator::make($request->all(), [
+        'status'=> 'required|in:approved',
+       ]);
+   
+       if ($validator->fails()) {
+           return redirect()->route('patients.viewAppointments')
+               ->withErrors($validator)
+               ->withInput();
+           }
+   
+       
+       $appointment = Appointment::find($appointmentId);
+   
+       if (!$appointment) {
+           return redirect()->back()->with('error', 'Appointment not found.');
+       }
+   
+       $appointment->status = 'rejected';
+       $appointment->save();
+   
+       return redirect()->back()->with('success', 'Appointment has been Canceled successfully.');
+
+}
+
+
+//View Medical Reports Function
+public function viewReports(){
+    $patientId = Auth::guard('patient')->user()->PatientID;
+    
+    $reports = MedicalReport::where('PatientID', $patientId)->get();
+    
+
+    return view('patient.viewreports', compact('reports'));
+}
+}
+
+
 

@@ -23,8 +23,8 @@
                       
                         <td>{{ $appointment->Date }}</td>
                         <td>{{ $appointment->Time }}</td>
-                        <td>{{ $appointment->patient->Name ?? 'Unknown' }}</td> <!-- Assumes a patient relationship -->
-                        <td>{{ $appointment->doctor->Name ?? 'Unknown' }}</td> <!-- Assumes a doctor relationship -->
+                        <td>{{ $appointment->patient->Name ?? 'Unknown' }}</td> 
+                        <td>{{ $appointment->doctor->Name ?? 'Unknown' }}</td> 
                         <td>
                             <!-- Form to respond to the appointment -->
                             <form action="{{ route('receptionists.respond', ['appointmentId'=>$appointment->AppointmentID]) }}" method="POST" style="display: inline;">

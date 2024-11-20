@@ -29,7 +29,7 @@ class ReceptionistController extends Controller
 
 
     //Respond to Appointment Request Function
-    public function respondToAppointmentRequest(Request $request, $appointmentId) //TEEEEEEEEEEEEEEEEEEEEEST
+    public function respondToAppointmentRequest(Request $request, $appointmentId) 
 {
 
     $validator = Validator::make($request->all(), [
@@ -37,7 +37,7 @@ class ReceptionistController extends Controller
     ]);
 
     if ($validator->fails()) {
-        return redirect()->route('patient.requestAppointmentForm')//---------------------------------
+        return redirect()->route('patient.requestAppointmentForm')
             ->withErrors($validator)
             ->withInput();
         }
@@ -67,6 +67,20 @@ class ReceptionistController extends Controller
     
         // Pass the appointments to the view
         return view('receptionist.viewappointments', compact('appointments'));
+    }
+
+
+    // View  Scheduled Appointments
+
+    public function viewAppointments(){
+        $receptionistId = Auth::guard('receptionist')->user()->ReceptionistID;
+        // Fetch appointments assigned to this receptionist with status "pending"
+        $appointments = Appointment::where('ReceptionistID', $receptionistId)
+            ->where('status', 'approved')
+            ->get();
+    
+        // Pass the appointments to the view
+        return view('receptionist.viewallappointments', compact('appointments'));
     }
 
 }

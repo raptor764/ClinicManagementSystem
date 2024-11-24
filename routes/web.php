@@ -99,6 +99,27 @@ Route::middleware('auth:patient')->group(function () {
 });
 
 
+// external routes/web.php for html for patient side 
+
+Route::get('/mypage', function () {
+    return view('patient.mypage');  // Points to resources/views/patient/mypage.blade.php
+})->name('mypage');  // You can name the route as 'mypage'
+
+Route::get('/doctors', function () {
+    return view('patient.doctors');  // Points to resources/views/patient/mypage.blade.php
+})->name('doctors');  // You can name the route as 'mypage'
+
+Route::get('/services', function () {
+    return view('patient.services');  // Points to resources/views/patient/mypage.blade.php
+})->name('services');  // You can name the route as 'mypage'
+
+Route::get('/contact', function () {
+    return view('patient.contact');  // Points to resources/views/patient/mypage.blade.php
+})->name('contact');  // You can name the route as 'mypage'
+
+
+
+
 //RECEPTIONIST ROUTES-------------------------------------------------------------------------
 
 // Respond to Appointment Request

@@ -1,152 +1,277 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        /* Reset Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #eef2f3; /* Light aesthetic background color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+        .container {
+            display: flex;
+            width: 900px;
+            max-width: 100%;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+        .form-section {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+        .info-section {
+            flex: 1;
+            background-color: #2b83ff;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+        }
 
-        <!-- Role Selection -->
-        <div class="mb-4">
-            <x-input-label for="role" :value="__('Role')" />
-            <select name="role" id="role" class="block mt-1 w-full" required onchange="showRoleFields()">
-                <option value="">Select Role</option>
-                <option value="doctor">Doctor</option>
-                <option value="assistant">Assistant</option>
-                <option value="receptionist">Receptionist</option>
-                <option value="patient">Patient</option>
-            </select>
-            <x-input-error :messages="$errors->get('role')" class="mt-2" />
-        </div>
+        .info-section h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
 
-        <!-- Doctor Specific Fields -->
-        <div id="doctor-fields" class="hidden">
-            <div>
-                <x-input-label for="specialization" :value="__('Specialization')" />
-                <x-text-input id="specialization" class="block mt-1 w-full" type="text" name="specialization" :value="old('specialization')" />
-                <x-input-error :messages="$errors->get('specialization')" class="mt-2" />
-            </div>
+        .info-section p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
 
-            <div class="mt-4">
-                <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="doctor_phone" :value="old('phone')"/>
-                <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-            </div>
+        .info-section a {
+            text-decoration: none;
+            color: #2b83ff;
+            background-color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
 
-            <div class="mt-4">
-                <x-input-label for="section_name" :value="__('Section Name')" />
-                <select id="section_name" name="doctor_section_name" class="block mt-1 w-full">
-                    <option value="">Select Section</option>
-                    @foreach($sections as $section)
-                        <option value="{{ $section->SectionID }}">{{ $section->Name }}</option>
-                    @endforeach
+        .info-section a:hover {
+            background-color: #e0e0e0;
+        }
+
+        .form-section h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-section label {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: block;
+            color: #333;
+        }
+
+        .form-section input,
+        .form-section select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .form-section input:focus,
+        .form-section select:focus {
+            outline: none;
+            border-color: #2b83ff;
+            box-shadow: 0 0 4px rgba(43, 131, 255, 0.4);
+        }
+
+        .form-section a {
+            font-size: 12px;
+            color: #2b83ff;
+            text-decoration: none;
+            margin-bottom: 15px;
+        }
+
+        .form-section a:hover {
+            text-decoration: underline;
+        }
+
+        .form-section button {
+            width: 100%;
+            padding: 15px;
+            background-color: #2b83ff;
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            text-transform: uppercase;
+        }
+
+        .form-section button:hover {
+            background-color: #1a6ad1;
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(26, 106, 209, 0.4);
+        }
+
+        /* Adjustments for Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .info-section {
+                padding: 20px;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Register</h2>
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+
+                <!-- Name -->
+                <label for="name">Name</label>
+                <input id="name" type="text" name="name" required autofocus />
+
+                <!-- Email -->
+                <label for="email">Email</label>
+                <input id="email" type="email" name="email" required />
+
+                <!-- Password -->
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password" required />
+
+                <!-- Confirm Password -->
+                <label for="password_confirmation">Confirm Password</label>
+                <input id="password_confirmation" type="password" name="password_confirmation" required />
+
+                <!-- Role -->
+                <label for="role">Role</label>
+                <select name="role" id="role" required onchange="showRoleFields()">
+                    <option value="">Select Role</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="assistant">Assistant</option>
+                    <option value="receptionist">Receptionist</option>
+                    <option value="patient">Patient</option>
                 </select>
-                <x-input-error :messages="$errors->get('section_name')" class="mt-2" />
-            </div>
+
+                <!-- Doctor Specific Fields -->
+                <div id="doctor-fields" class="hidden">
+                    <label for="specialization">Specialization</label>
+                    <input id="specialization" type="text" name="specialization" />
+
+                    <label for="phone">Phone</label>
+                    <input id="phone" type="text" name="doctor_phone" />
+
+                    <label for="section_name">Section Name</label>
+                    <select id="section_name" name="doctor_section_name">
+                        <option value="">Select Section</option>
+                        @foreach($sections as $section)
+                            <option value="{{ $section->SectionID }}">{{ $section->Name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Assistant Specific Fields -->
+                <div id="assistant-fields" class="hidden">
+                    <label for="phone">Phone</label>
+                    <input id="phone" type="text" name="assistant_phone" />
+
+                    <label for="section_name">Section Name</label>
+                    <select id="section_name" name="assistant_section_name">
+                        <option value="">Select Section</option>
+                        @foreach($sections as $section)
+                            <option value="{{ $section->SectionID }}">{{ $section->Name }}</option>
+                        @endforeach
+                    </select>
+
+                    <label for="doctor_name">Doctor Name</label>
+                    <select id="doctor_name" name="doctor_name">
+                        <option value="">Select Doctor</option>
+                        @foreach($doctors as $doctor)
+                            <option value="{{ $doctor->DoctorID }}">{{ $doctor->Name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Patient Specific Fields -->
+                <div id="patient-fields" class="hidden">
+                    <label for="date_of_birth">Date of Birth</label>
+                    <input id="date_of_birth" type="date" name="date_of_birth" />
+
+                    <label for="address">Address</label>
+                    <input id="address" type="text" name="address" />
+
+                    <label for="phone">Phone</label>
+                    <input id="phone" type="text" name="patient_phone" />
+                </div>
+
+                <!-- Receptionist Specific Fields -->
+                <div id="receptionist-fields" class="hidden">
+                    <label for="phone">Phone</label>
+                    <input id="phone" type="text" name="receptionist_phone" />
+                </div>
+
+                <a href="{{ route('login') }}">Already registered? Log in</a>
+                <button type="submit">Register</button>
+            </form>
         </div>
 
-        <!-- Assistant Specific Fields -->
-        <div id="assistant-fields" class="hidden">
-            <div class="mt-4">
-                <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="assistant_phone" :value="old('phone')"/>
-                <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-            </div>
-
-            <div class="mt-4">
-                <x-input-label for="section_name" :value="__('Section Name')" />
-                <select id="section_name" name="assistant_section_name" class="block mt-1 w-full">
-                    <option value="">Select Section</option>
-                    @foreach($sections as $section)
-                        <option value="{{ $section->SectionID }}">{{ $section->Name }}</option>
-                    @endforeach
-                </select>
-                <x-input-error :messages="$errors->get('section_name')" class="mt-2" />
-            </div>
-
-            <div class="mt-4">
-                <x-input-label for="doctor_name" :value="__('Doctor Name')" />
-                <select id="doctor_name" name="doctor_name" class="block mt-1 w-full">
-                    <option value="">Select Doctor</option>
-                    @foreach($doctors as $doctor)
-                        <option value="{{ $doctor->DoctorID }}">{{ $doctor->Name }}</option>
-                    @endforeach
-                </select>
-                <x-input-error :messages="$errors->get('doctor_name')" class="mt-2" />
-            </div>
+        <!-- Info Section -->
+        <div class="info-section">
+            <h1>Join Our Care Community</h1>
+            <p>Be part of a seamless healthcare experience. Register now to access personalized tools for patient management, scheduling, and more.</p>
+            <a href="{{ route('login') }}">Sign In</a>
         </div>
-
-        <!-- Patient Specific Fields -->
-        <div id="patient-fields" class="hidden">
-            <div class="mt-4">
-                <x-input-label for="date_of_birth" :value="__('Date of Birth')" />
-                <x-text-input id="date_of_birth" class="block mt-1 w-full" type="date" name="date_of_birth" :value="old('date_of_birth')" />
-                <x-input-error :messages="$errors->get('date_of_birth')" class="mt-2" />
-            </div>
-
-            <div class="mt-4">
-                <x-input-label for="address" :value="__('Address')" />
-                <x-text-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" />
-                <x-input-error :messages="$errors->get('address')" class="mt-2" />
-            </div>
-
-            <div class="mt-4">
-                <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="patient_phone" :value="old('phone')"/>
-                <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-            </div>
-        </div>
-
-        <!-- Receptionist Specific Fields -->
-        <div id="receptionist-fields" class="hidden">
-            <div class="mt-4">
-                <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="text" name="receptionist_phone" :value="old('phone')"/>
-                <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-            </div>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
+    </div>
 
     <script>
         function showRoleFields() {
             const role = document.getElementById("role").value;
             document.getElementById("doctor-fields").classList.add("hidden");
-            document.getElementById("patient-fields").classList.add("hidden");
             document.getElementById("assistant-fields").classList.add("hidden");
+            document.getElementById("patient-fields").classList.add("hidden");
             document.getElementById("receptionist-fields").classList.add("hidden");
 
             if (role === "doctor") {
@@ -160,4 +285,5 @@
             }
         }
     </script>
-</x-guest-layout>
+</body>
+</html>

@@ -41,7 +41,7 @@ class DoctorController extends Controller
         $appointments = Appointment::where('DoctorID', $doctorId)->where('status', 'approved')->get();
         
         // Pass the appointments to the view
-        return view('assistant.viewappointments', compact('appointments'));
+        return view('doctor.viewappointments', compact('appointments'));
     }
 
     //View Conducted Sessions for Doctor
@@ -193,4 +193,3 @@ class DoctorController extends Controller
     }
     
 }
-
